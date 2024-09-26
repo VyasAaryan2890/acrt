@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add To Cart</title>
+<style>
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+body{
+    background-color: #fff;
+}
+.container{
+    margin: auto;
+    transition: 0.5s;
+    width: 900px;
+    max-width: 90vw;
+}
+header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 80px;
+    cursor: pointer;
+    height: 80px;
+}
+.shoppingBasket{
+    display: flex;
+    position: relative;
+}
+.shoppingBasket p{
+    font-size: 30px;
+}
+.shoppingBasket .quantity{
+    background-color: red;
+    color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    padding: 0px 8px;
+    top: -2px;
+    left: 10px;
+
+}
+
+/* for javascript div code */
+.product{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    column-gap: 25px;
+    row-gap: 25px;
+    margin: 10px 10px;
+    padding: 0px 55px;
+}
+@media(max-width:500px){
+    .product{
+        display:grid;
+        grid-template-columns: repeat(2,1fr);
+       
+    }
+}
+.product .item{
+    text-align: center;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0px 50px #757676;
+}
+.product .item img:hover{
+    scale: 1.02;
+    cursor: pointer;
+    transition: 0.5s;
+}
+.product .item .name{
+    font-weight: 600;
+}
+.product .item .price{
+    margin: 10px;
+}
+.product .item button{
+    background-color: black;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+
+/* css for sidebar */
+
+.cart{
+    position: fixed;
+    top:0;
+    left: 100%;
+    width: 400px;
+    background: #453e3b;
+    height: 100vh;
+    transition: 0.5s;
+}
+.cart h3{
+    font-weight: 600;
+    text-align:center;
+    color: #fff;
+    margin-top: 10px;
+    font-size: 50px;
+}
+.cart .checkout{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+}
+.cart .checkout div{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: beige;
+}
+.cart .checkout div:nth-child(2){
+    background-color: black;
+    color: #fff;
+}
+.active .cart{
+    left: calc(100% - 400px);
+}
+
+.productList{
+    padding: 15px;
+    height: auto;
+}
+.productList li{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    color: #fff;
+    row-gap: 10px;
+    margin-bottom: 20px;
+    border: 1px solid;
+    align-items: center;
+}
+.productList li img{
+    width: 50px;
+    background-color: #fff;
+    border-radius: 3px;
+}
+.productList li div{
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    justify-content: space-around;
+}
+.productList li button{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2>The Book Shop</h2>
+                <div class="shoppingBasket">
+                    <p>x</p>
+                    <span class="quantity">0</span>
+                </div>
+        </header>
+    </div>
+
+    <!-- dynamic prodyct -->
+
+    <div class="product">
+
+    </div>
+
+
+<!-- code for add to cart section -->
+
+
+    <div class="cart">
+        <h3>Your Cart</h3>
+            <ul class="productList"></ul>
+
+            <div class="checkout">
+                <div class="total"><small>Subtotal(0 items) $0</small></div>
+                <div class="close">Close</div>
+            </div>
+    </div>
+
+
+    <script>
+
+        let ArrayProduct = [
+            {
+                id: 1,
+                name: "iphone",
+                image: "s1.webp",
+                price: "12999",
+                rating: 5,
+            },
+            {
+                id: 2,
+                name: "iphone",
+                image: "s2.webp",
+                price: "14000",
+                rating: 5,
+            },
+            {
+                id: 3,
+                name: "iphone",
+                image: "s3.webp",
+                price: "12999",
+                rating: 5,
+            },
+            {
+                id: 4,
+                name: "iphone",
+                image: "s4.webp",
+                price: "12999",
+                rating: 5,
+            },
+            {
+                id: 5,
+                name: "iphone",
+                image: "s5.webp",
+                price: "12999",
+                rating: 5,
+            },
+            {
+                id: 6,
+                name: "iphone",
+                image: "white.webp",
+                price: "12999",
+                rating: 5,
+            },
+
+        ];
+
+        const body = document.querySelector("body"),
+        products = document.querySelector(".product"),
+        shoppingBasket = document.querySelector(".shoppingBasket"),
+        closeCart = document.querySelector(".close"),
+        productList = document.querySelector(".productList"),
+        quantity = document.querySelector(".quantity"),
+        total = document.querySelector(".total");
+
+
+        let checkOutList = [];
+
+
+        shoppingBasket.onclick = ()=>{
+            body.classList.add("active");
+        };
+
+        closeCart.onclick = () =>{
+            body.classList.remove("active");
+        };
+
+
+
+        function onInIt(){
+            ArrayProduct.forEach((item,key)=>{
+                let div  = document.createElement("div");
+                div.classList.add("item");
+
+                div.innerHTML=`
+                <img src="${item.image}" />
+                <div class="name">${item.name}</div>
+                <div class="price"><small>$ </small>${item.price}</div>
+                <button onclick="addTocart(${key})">Add To Cart</button>
+                `;
+                products.appendChild(div);
+            })
+        }
+        onInIt()
+
+        function addTocart(Id){
+           
+            if(checkOutList[Id]==null){
+                checkOutList[Id] = ArrayProduct[Id];
+                checkOutList[Id].quantity = 1;
+            }
+            else{
+                checkOutList[Id].quantity += 1;
+            }
+            reloadCart();
+        }
+
+
+        function reloadCart(){
+            productList.innerHTML = "";
+            let count = 0;
+            let totalPrice = 0;
+            checkOutList.forEach((item,key)=>{
+                totalPrice+=parseInt(item.price*item.quantity);
+                count += item.quantity;
+                let li = document.createElement("li");
+                li.innerHTML = `
+                    <img src="${item.image}"/>
+                    <div>${item.name}</div>
+                    <div>${item.price}</div>
+                    <div>
+                        <button onclick="changeQuantity(${key},${item.quantity-1})">-</button>
+                        <div class="count">${item.quantity}</div>
+                        <button onclick="changeQuantity(${key},${item.quantity+1})">+</button>
+                `;
+
+                productList.appendChild(li);
+            });
+            total.innerHTML =`<small>Subtotal(${count} items) $0</small>`+totalPrice;
+            quantity.innerHTML = count;
+        }
+
+        function changeQuantity(key,quantity){
+            if(quantity ==0){
+                delete checkOutList[key];
+
+            }else{
+                checkOutList[key].quantity =quantity;
+            }
+            reloadCart()
+        }
+    </script>
+</body>
+</html>
